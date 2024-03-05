@@ -18,6 +18,27 @@
   become: True
   register: podman_install_result
 
+- block:
+    - name: Ensure /opt/bin exists
+      file:
+        path: /opt/bin
+        state: directory
+        owner: root
+        group: root
+        mode: 0777
+      become: true
+
+    - name: Download crun binary
+      # NOTE(wszumski): Workaround for known issue with crun when running via systemd, see:
+      # https://github.com/containers/crun/issues/1308
+      ansible.builtin.get_url:
+        url: "{{ podman_binary_crun_url }}"
+        dest: /opt/bin/crun
+        mode: '0755'
+      become: true
+
+  when: podman_enable_binary_crun | bool
+
 # If any packages were updated, and any containers were running, wait for the
 # daemon to come up and start all previously running containers.
 

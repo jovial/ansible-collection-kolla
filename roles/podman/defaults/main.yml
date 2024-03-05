@@ -6,6 +6,9 @@ apt_cache_valid_time: 3600
 podman_packages:
   - "podman"
 
+podman_enable_binary_crun: "{{ ansible_facts.distribution == 'Ubuntu' and ansible_facts.distribution_version == '22.04' }}"
+podman_binary_crun_url: "https://github.com/containers/crun/releases/download/1.14.4/crun-1.14.4-linux-amd64"
+
 # Podman config variables
 podman_storage_driver:
 podman_runtime_directory:
